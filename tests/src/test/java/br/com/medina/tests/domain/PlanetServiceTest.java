@@ -19,7 +19,11 @@ import static br.com.medina.tests.common.PlanetConstant.PLANET;
 import static br.com.medina.tests.common.PlanetConstant.INVALID_PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 // A annotaion abaixo indica que o sprint precisa escanear o projeto a procura
@@ -52,4 +56,34 @@ public class PlanetServiceTest {
 
     }
 
+    @Test
+    public void getPlanet_ByExistingId_ReturnsPlanet() {
+        when(planetRepository.findById(1L)).thenReturn(Optional.of(PLANET));
+
+        Optional<Planet> planet = planetService.get(1L);
+        assertThat(planet).isNotEmpty();
+        assertThat(planet.get()).isEqualTo(PLANET);
+    }
+
+    @Test
+    public void getPlanet_ByUnexistingId_ReturnsEmpty() {
+        when(planetRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Optional<Planet> planet = planetService.get(1L);
+        assertThat(planet).isEmpty();
+    }
+
+    @Test
+    public void getPlanet_ByExistingName_ReturnsPlanet() {
+        when(planetRepository.findPlanetByName(anyString())).thenReturn(Optional.of(PLANET));
+        Optional<Planet> planet = planetService.findPlanetByName("name");
+        assertThat(planet).isNotEmpty();
+        assertThat(planet.get()).isEqualTo(PLANET);
+    }
+
+    @Test
+    public void getPlanet_ByUnexistingName_ReturnsEmpty() {
+        when(planetRepository.findPlanetByName(anyString())).thenReturn(Optional.empty());
+        Optional<Planet> planet = planetService.findPlanetByName("name");
+        assertThat(planet).isEmpty();
+    }
 }

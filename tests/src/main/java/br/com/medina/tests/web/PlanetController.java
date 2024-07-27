@@ -1,7 +1,13 @@
 package br.com.medina.tests.web;
 
+import java.util.Optional;
+
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,5 +26,21 @@ public class PlanetController {
     @PostMapping
     public ResponseEntity<Planet> create(@RequestBody Planet planet) {
         return ResponseEntity.ok().body(planetService.create(planet));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Planet> get(@PathVariable("id") Long id) {
+        return planetService
+                .get(id)
+                .map(planet -> ResponseEntity.ok().body(planet))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Planet> findPlanetByName(@PathVariable String name) {
+        return planetService
+                .findPlanetByName(name)
+                .map(planet -> ResponseEntity.ok().body(planet))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
