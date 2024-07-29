@@ -37,6 +37,6 @@ public class PlanetRepositoryTest {
     public void createPlanet_withInvalidData_ThrowsException() {
         Planet emptyPlanet = new Planet();
 
-        // assertThatThrownBy(() -> planetRepository.save(emptyPlanet));
+        assertThatThrownBy(() -> planetRepository.save(emptyPlanet));
     }
 }

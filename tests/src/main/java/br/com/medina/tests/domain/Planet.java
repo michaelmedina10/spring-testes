@@ -12,10 +12,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "planets")
 public class Planet {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -27,9 +28,9 @@ public class Planet {
     public Planet() {
     }
 
-    public Planet(String terrain, String climate) {
-        this.terrain = terrain;
+    public Planet(String climate, String terrain) {
         this.climate = climate;
+        this.terrain = terrain;
     }
 
     public Planet(String name, String climate, String terrain) {
@@ -38,8 +39,6 @@ public class Planet {
         this.terrain = terrain;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -76,4 +75,10 @@ public class Planet {
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(obj, this);
     }
+
+    @Override
+    public String toString() {
+        return "Planet [climate=" + climate + ", id=" + id + ", name=" + name + ", terrain=" + terrain + "]";
+    }
+
 }
