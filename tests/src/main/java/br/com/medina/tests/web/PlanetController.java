@@ -1,16 +1,19 @@
 package br.com.medina.tests.web;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.medina.tests.domain.Planet;
@@ -42,5 +45,18 @@ public class PlanetController {
                 .findPlanetByName(name)
                 .map(planet -> ResponseEntity.ok().body(planet))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Planet>> list(@RequestParam(required = false) String terrain,
+            @RequestParam(required = false) String climate) {
+        List<Planet> planets = planetService.list(terrain, climate);
+        return ResponseEntity.ok(planets);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        planetService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
