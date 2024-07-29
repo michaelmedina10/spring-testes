@@ -2,6 +2,7 @@ package br.com.medina.tests.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,8 +14,14 @@ import jakarta.persistence.Table;
 public class Planet {
 
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String climate;
+
+    @Column(nullable = false)
     private String terrain;
 
     public Planet() {
