@@ -4,13 +4,11 @@ import static br.com.medina.tests.common.PlanetConstant.PLANET;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import jakarta.persistence.EntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 public class PlanetRepositoryTest {
@@ -19,14 +17,14 @@ public class PlanetRepositoryTest {
     private PlanetRepository planetRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private TestEntityManager testEntityManager;
 
     @Test
     public void createPlanet_withValidData_returnsPlanet() {
 
         planetRepository.save(PLANET);
 
-        Planet sut = entityManager.find(Planet.class, PLANET.getId());
+        Planet sut = testEntityManager.find(Planet.class, PLANET.getId());
         assertThat(sut).isNotNull();
         assertThat(sut.getName()).isEqualTo(PLANET.getName());
         assertThat(sut.getClimate()).isEqualTo(PLANET.getClimate());
@@ -38,5 +36,14 @@ public class PlanetRepositoryTest {
         Planet emptyPlanet = new Planet();
 
         assertThatThrownBy(() -> planetRepository.save(emptyPlanet));
+    }
+
+    @Test
+    public void createPlanet_WithExistingName_ThrowsException() {
+        Planet planet = testEntityManager.persistAndFlush(PLANET);
+        testEntityManager.detach(planet);
+        planet.setId(null);
+
+        assertThatThrownBy(() -> planetRepository.save(planet)).isInstanceOf(RuntimeException.class);
     }
 }
