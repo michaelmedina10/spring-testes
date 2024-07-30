@@ -1,12 +1,9 @@
 package br.com.medina.tests.web;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +26,7 @@ public class PlanetController {
 
     @PostMapping
     public ResponseEntity<Planet> create(@RequestBody Planet planet) {
-        return ResponseEntity.ok().body(planetService.create(planet));
+        return ResponseEntity.status(HttpStatus.CREATED).body(planetService.create(planet));
     }
 
     @GetMapping("/{id}")
