@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.medina.tests.domain.Planet;
 import br.com.medina.tests.domain.PlanetService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/planets")
@@ -25,7 +26,7 @@ public class PlanetController {
     private PlanetService planetService;
 
     @PostMapping
-    public ResponseEntity<Planet> create(@RequestBody Planet planet) {
+    public ResponseEntity<Planet> create(@RequestBody @Valid Planet planet) {
         return ResponseEntity.status(HttpStatus.CREATED).body(planetService.create(planet));
     }
 

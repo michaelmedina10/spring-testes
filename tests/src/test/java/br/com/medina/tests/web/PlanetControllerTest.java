@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.medina.tests.domain.Planet;
 import br.com.medina.tests.domain.PlanetService;
 
 import static br.com.medina.tests.common.PlanetConstant.PLANET;
@@ -40,5 +41,23 @@ public class PlanetControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$").value(PLANET));
+    }
+
+    @Test
+    public void createPlanet_withInValidData_returnsBadRequest() throws Exception {
+        Planet emptyPlanet = new Planet();
+        Planet invalidPlanet = new Planet("", "", "");
+
+        mockMvc
+                .perform(post("/planets")
+                        .content(objectMapper.writeValueAsString(emptyPlanet))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
+
+        mockMvc
+                .perform(post("/planets")
+                        .content(objectMapper.writeValueAsString(invalidPlanet))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
     }
 }
